@@ -4,3 +4,6 @@
 [submodule "docker_utils"]
 	path = docker_utils
 	url = git@anrisoftware.com:docker_utils.git
+[submodule "postgresql_docker"]
+	path = postgresql_docker
+	url = git@anrisoftware.com:postgresql_docker.git
