@@ -7,3 +7,9 @@
 [submodule "postgresql_docker"]
 	path = postgresql_docker
 	url = git@anrisoftware.com:postgresql_docker.git
+[submodule "maradns_docker"]
+	path = maradns_docker
+	url = git@anrisoftware.com:maradns_docker.git
+[submodule "pgadmin_docker"]
+	path = pgadmin_docker
+	url = git@anrisoftware.com:pgadmin_docker.git
