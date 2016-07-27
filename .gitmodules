@@ -13,3 +13,6 @@
 [submodule "pgadmin_docker"]
 	path = pgadmin_docker
 	url = git@anrisoftware.com:pgadmin_docker.git
+[submodule "docker"]
+	path = docker
+	url = git@github.com:odoo/docker.git

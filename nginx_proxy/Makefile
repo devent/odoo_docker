@@ -10,15 +10,12 @@ DNS_SERVER ?= odoo_dns
 CONFIG := conf.d
 # active domains
 SITES := sites
-# data container
-DATA_VOL_NAME := odoo_proxy_data
-DATA_MOUNT_PATH := var/cache/nginx
-DATA_IMAGE_NAME := $(IMAGE_NAME)
-DATA_CONTAINER_NAME := odoo_proxy_data
 # Nginx local user
 CONTAINER_USER ?= nginx
 # Set to PORTS='-p 80:80 -p 443:443' to use Nginx on localhost.
 PORTS ?= -p 80:80 -p 443:443
+# CACHE DIR
+CACHE_DIR := /var/lib/odoo_nginx
 
 include ../docker_make_utils/Makefile.help
 include ../docker_make_utils/Makefile.functions
@@ -30,7 +27,7 @@ $(DNS_SERVER_ARG) \
 docker run \
 --name $(NAME) \
 $$DNS_ARG \
---volumes-from $(DATA_CONTAINER_NAME) \
+-v "$(CACHE_DIR):/var/cache/nginx" \
 -v "`realpath nginx.conf`:/etc/nginx/nginx.conf.custom" \
 -v "`realpath $(CONFIG)`:/etc/nginx/conf.d" \
 -v "`realpath $(SITES)`:/etc/nginx/sites-enabled" \
@@ -41,20 +38,24 @@ $(PORTS) \
 $(IMAGE_NAME)
 endef
 
-.PHONY +: run rerun rm clean test restart dataContainer rm_dataContainer connect user drop dropdb dropuser
+.PHONY +: run rerun rm clean test restart
 
-run: dataContainer _containeruser _run ##@default Starts the container.
+run: _containeruser $(CACHE_DIR) _run ##@default Starts the container.
 
 rerun: _rerun ##@targets Stops and starts the container.
 
 rm: _rm ##@targets Stops and removes the container.
-
-clean: _clean rm_dataContainer ##@targets Stops and removes the container and removes all created files.
 	set -x \
 	&& USER="`whoami`" \
 	&& sudo chown -R `id -u $$USER`.`id -g $$USER` nginx.conf $(CONFIG) $(SITES)
 
-test: testDataContainer _test ##@targets Tests if the container is running.
+clean: _clean ##@targets Stops and removes the container and removes all created files.
+	set -x \
+	&& USER="`whoami`" \
+	&& sudo chown -R `id -u $$USER`.`id -g $$USER` nginx.conf $(CONFIG) $(SITES)
+	sudo rm -rf $(CACHE_DIR)
+
+test: _test ##@targets Tests if the container is running.
 
 restart: ##@targets Restarts the container.
 	if $(container_running); then \
@@ -65,8 +66,6 @@ restart: ##@targets Restarts the container.
 
 bash: test _bash ##@targets Executes the bash inside the running container.
 
-dataContainer: _dataContainer ##@targets Creates the data container.
-
-rm_dataContainer: _rm_dataContainer ##@targets Removes the data container.
-
-testDataContainer: _testDataContainer ##@targets Tests that the data container is available.
+$(CACHE_DIR):
+	sudo mkdir -p $(CACHE_DIR)
+	sudo chown $(CONTAINER_USER).$(CONTAINER_USER) -R $(CACHE_DIR)
