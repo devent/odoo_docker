@@ -1,5 +1,5 @@
 # docker image version
-VERSION := 9.0-20160724_build_001
+VERSION := 9.0-20160727_build_001
 # The name of the docker image.
 IMAGE_NAME := erwinnttdata/odoo:$(VERSION)
 # docker container name
@@ -8,6 +8,7 @@ NAME := odoo
 DNS_SERVER ?= odoo_dns
 # container local user
 CONTAINER_USER ?= odoo
+PORTS ?= -p 8069:8069
 # Data directory
 DATA_DIR := /var/lib/odoo9
 
@@ -21,13 +22,13 @@ $(DNS_SERVER_ARG) \
 docker run \
 --name $(NAME) \
 $$DNS_ARG \
--p 8069:8069 \
 -e ODOO_USER_ID=`id -u odoo` \
 -e ODOO_GROUP_ID=`id -g odoo` \
 -e DB_PORT_5432_TCP_ADDR="postgres_9_4.weave.local" \
 -e DB_PORT_5432_TCP_PORT="5432" \
 -e DB_ENV_POSTGRES_USER="odoo9" \
 -e DB_ENV_POSTGRES_PASSWORD="Choh5wieghar6eeN4aquiThie4quaa5o" \
+-v "$(DATA_DIR):/var/lib/odoo" \
 $(PORTS) \
 -d \
 $(IMAGE_NAME) \

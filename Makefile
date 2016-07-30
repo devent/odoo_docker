@@ -22,10 +22,11 @@ postgres: weave ##@targets Installs and setups pgAdmin.
 	cd postgresql_local && $(MAKE)
 
 odoo: weave ##@targets Installs and setups Odoo 9.
-	cd odoo_local && $(MAKE)
+	cd odoo9_local && $(MAKE)
 
 clean-all: ##@targets Removes all created containers and volumes.
-	cd postgresql_local && $(MAKE) clean
 	cd nginx_proxy && $(MAKE) clean
+	cd odoo9_local && $(MAKE) clean
+	cd postgresql_local && $(MAKE) clean
 	cd pgadmin4_local && $(MAKE) clean
 	cd maradns_container && $(MAKE) clean

@@ -1,7 +1,7 @@
 REPOSITORY := erwinnttdata
 NAME := odoo
 BUILD := 001
-VERSION ?= 9.0-20160724_build_$(BUILD)
+VERSION ?= 9.0-20160727_build_$(BUILD)
 
 build: _build ##@targets Builds the docker image.
 
