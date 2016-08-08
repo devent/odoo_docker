@@ -18,7 +18,6 @@ PORTS ?= -p 80:80 -p 443:443
 CACHE_DIR := /var/lib/odoo_nginx
 
 include ../docker_make_utils/Makefile.help
-include ../docker_make_utils/Makefile.functions
 include ../docker_make_utils/Makefile.container
 
 define DOCKER_CMD :=

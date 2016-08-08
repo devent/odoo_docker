@@ -3,7 +3,11 @@ MAINTAINER Odoo S.A. <info@odoo.com>
 MAINTAINER Erwin Mueller <erwin.mueller@nttdata.com>
 
 # Set local cache. Remove if not needed.
-RUN set -x && echo "Acquire::http::Proxy \"http://172.17.0.1:3142\";" > /etc/apt/apt.conf.d/01proxy
+ARG APT_CACHE
+RUN set -x \
+    && if [ -n "$APT_CACHE" ]; then \
+        echo "Acquire::http::Proxy \"$APT_CACHE\";" > /etc/apt/apt.conf.d/01proxy ;\
+    fi
 
 # Install gosu.
 ENV GOSU_VERSION 1.9
